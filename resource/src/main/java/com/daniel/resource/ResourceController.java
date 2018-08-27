@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,26 +16,27 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:8080")
 @Slf4j
 public class ResourceController {
 
     @RequestMapping(value = "/")
-    public ResponseEntity welcome(){
-        return new ResponseEntity("Welcome. RESOURCE SERVER", HttpStatus.OK);
+    public ResponseEntity<String> welcome(){
+        return new ResponseEntity<String>("Welcome. RESOURCE SERVER", HttpStatus.OK);
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
-    public ResponseEntity getUser(Principal user){
+    public ResponseEntity<Map<String, Object>> getUser(Principal user){
         Map<String, Object> map = new LinkedHashMap<String, Object>();
         map.put("name", user.getName());
         map.put("roles", AuthorityUtils.authorityListToSet(((Authentication) user)
                 .getAuthorities()));
-        return new ResponseEntity(map, HttpStatus.OK);
+        return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.POST)
-    public ResponseEntity postMethodTest(){
-        return new ResponseEntity("RESOURCE SERVER. POST METHOD.", HttpStatus.OK);
+    public ResponseEntity<String> postMethodTest(){
+        return new ResponseEntity<String>("RESOURCE SERVER. POST METHOD.", HttpStatus.OK);
     }
 
 }
